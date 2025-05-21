@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
-import { format, parseISO } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
-import { pictocodeToString } from './components/apiWheater';
-import InfoSections from './components/InfoSections';
-import ImageViewerModal from './components/ImageViewerModal';
+import InfoSections from '../components/InfoSections';
+import ImageViewerModal from '../components/ImageViewerModal';
+import { fetchWeatherData } from '../services/wheaterService';
 
 const PELOTAS_LAT = -31.77;
 const PELOTAS_LON = -52.34;
@@ -35,87 +33,25 @@ export default function Page() {
 
 
   useEffect(() => {
-    const fetchWeather = async () => {
-      console.log("Iniciando fetchWeather...");
-      try {
-        setLoading(true);
-        setError(null);
-        console.log("Chamando API:", METEOBLUE_API_URL);
-        const response = await fetch(METEOBLUE_API_URL);
-        console.log("Resposta da API recebida:", response.status);
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const { temperatura, condicaoClima, dataHora } = await fetchWeatherData();
+      setTemperatura(temperatura);
+      setCondicaoClima(condicaoClima);
+      setDataHora(dataHora);
+    } catch (err: any) {
+      console.error("Erro:", err);
+      setError(err.message);
+      Alert.alert("Erro", `Não foi possível carregar a temperatura: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`Erro HTTP: ${response.status} - ${errorText || response.statusText}`);
-        }
-
-        const data = await response.json();
-        console.log("Dados da API:", data);
-
-        let temp: number | null = null;
-        let timeString: string | null = null;
-        let conditionString: string | null = null;
-        let pictocode: number | null = null;
-
-
-        if (data && data.data_current) {
-          console.log("Extraindo dados de data.data_current");
-          if (data.data_current.temperature !== undefined && data.data_current.temperature !== null) {
-             temp = data.data_current.temperature;
-          }
-
-          if (data.data_current.time) {
-            timeString = data.data_current.time;
-          }
-
-          if (data.data_current.pictocode !== undefined && data.data_current.pictocode !== null) {
-              pictocode = data.data_current.pictocode;
-          }
-
-           if (pictocode !== null) {
-               conditionString = pictocodeToString[pictocode] || 'Condição Desconhecida';
-               console.log(`Pictocode ${pictocode} mapeado para string: ${conditionString}`);
-           } else {
-               conditionString = 'Condição Desconhecida';
-           }
-
-        }
-
-
-        if (temp !== null) {
-          setTemperatura(temp);
-
-          let dataHoraLocal = new Date();
-           if (timeString) {
-             try {
-               dataHoraLocal = parseISO(timeString);
-               dataHoraLocal = new Date(dataHoraLocal.getTime() - (3 * 60 * 60 * 1000));
-
-             } catch (e) {
-               console.error("Erro ao parsear string de data ou ajustar fuso horário:", timeString, e);
-             }
-           }
-
-          const dataHoraFormatada = format(dataHoraLocal, "dd 'de' MMMM 'de' HH:mm", { locale: ptBR });
-          setDataHora(dataHoraFormatada);
-
-          setCondicaoClima(conditionString);
-
-        } else {
-          throw new Error('Temperatura não encontrada nos dados da API.');
-        }
-      } catch (e: any) {
-        console.error("Erro ao buscar dados da MeteoBlue:", e);
-        setError(`Não foi possível carregar a temperatura: ${e.message}`);
-        Alert.alert("Erro", `Não foi possível carregar a temperatura: ${e.message}`);
-      } finally {
-        setLoading(false);
-        console.log("fetchWeather finalizado.");
-      }
-    };
-
-    fetchWeather();
-  }, []);
+  fetchData();
+}, []);
 
   return (
     <View style={styles.container}>
