@@ -25,7 +25,7 @@ export default function InfoSections({ onQuadraImagePress }: InfoSectionsProps) 
   return (
     <View style={styles.container}>
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>O Gonzaga</Text>
+        <Text style={styles.sectionTitle}></Text>
         <View style={styles.infoPlaceholder}>
           <Text style={styles.placeholderText}>Pré-informações sobre O Gonzaga</Text>
         </View>
@@ -33,7 +33,7 @@ export default function InfoSections({ onQuadraImagePress }: InfoSectionsProps) 
 
       <View style={styles.section}>
          {/* Título da seção Quadras - Ajustado marginBottom */}
-         <Text style={styles.sectionTitleQuadras}>Quadras</Text>
+         <Text style={styles.sectionTitleQuadras}></Text>
         <View style={styles.quadrasImagesContainer}>
             {QUADRA_IMAGE_URLS.map((url, index) => (
                 <View key={index} style={styles.quadraItemContainer}>
@@ -50,7 +50,7 @@ export default function InfoSections({ onQuadraImagePress }: InfoSectionsProps) 
       </View>
 
       <View style={styles.section}>
-         <Text style={styles.sectionTitle}>Fale Conosco</Text>
+         <Text style={styles.sectionTitle}></Text>
         <View style={styles.infoPlaceholder}>
            <SocialButtons />
         </View>

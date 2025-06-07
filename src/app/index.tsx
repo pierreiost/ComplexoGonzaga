@@ -4,12 +4,6 @@ import InfoSections from '../components/InfoSections';
 import ImageViewerModal from '../components/ImageViewerModal';
 import { fetchWeatherData } from '../services/wheaterService';
 
-const PELOTAS_LAT = -31.77;
-const PELOTAS_LON = -52.34;
-
-const METEOBLUE_API_KEY = 'W1HFf0IOLYdtAJlG.'; // retirar ponto do final para funcionar
-const METEOBLUE_API_URL = `https://my.meteoblue.com/packages/current?lat=${PELOTAS_LAT}&lon=${PELOTAS_LON}&apikey=${METEOBLUE_API_KEY}&format=json`;
-
 
 export default function Page() {
   const [temperatura, setTemperatura] = useState<number | null>(null);
@@ -107,6 +101,7 @@ export default function Page() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    
     backgroundColor: '#FFFFFFFF',
     paddingTop: 20,
   },
