@@ -1,63 +1,155 @@
-import React from 'react';
-import { Modal, View, Image, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons'; // Ícone para fechar
+import React, { useState, useEffect } from 'react';
 
+// Interface para definir os tipos das props
 interface ImageViewerModalProps {
   visible: boolean;
   imageUrl: string | null;
   onClose: () => void;
 }
 
-export default function ImageViewerModal({ visible, imageUrl, onClose }: ImageViewerModalProps) {
-  if (!visible || !imageUrl) {
-    return null; // Não renderiza se não estiver visível ou sem URL
-  }
+const ImageViewerModal: React.FC<ImageViewerModalProps> = ({
+  visible,
+  imageUrl,
+  onClose,
+}) => {
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const [screenHeight, setScreenHeight] = useState(window.innerHeight);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+      setScreenHeight(window.innerHeight);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  if (!visible) return null;
+
+  // Estilos EXATAMENTE iguais ao seu StyleSheet original
+  const styles = {
+    modalContainer: {
+      position: 'fixed' as const,
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.95)',
+      zIndex: 1000,
+    },
+    overlay: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: '100%',
+      height: '100%',
+      padding: '20px',
+    },
+    imageWrapper: {
+      width: '100%',
+      maxWidth: screenWidth - 40,
+      maxHeight: screenHeight - 100,
+      backgroundColor: 'rgba(255, 255, 255, 0.05)',
+      borderRadius: '12px',
+      overflow: 'hidden',
+    },
+    header: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      padding: '15px',
+      paddingBottom: '10px',
+    },
+    closeButton: {
+      width: '40px',
+      height: '40px',
+      borderRadius: '20px',
+      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      border: '1px solid rgba(255, 255, 255, 0.3)',
+      cursor: 'pointer',
+    },
+    closeButtonText: {
+      color: '#FFFFFF',
+      fontSize: '20px',
+      fontWeight: 'bold',
+      lineHeight: '20px',
+    },
+    scrollContainer: {
+      display: 'flex',
+      flexGrow: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: screenHeight * 0.4,
+      overflow: 'auto',
+    },
+    imageContainer: {
+      width: screenWidth - 60,
+      maxHeight: screenHeight * 0.7,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    image: {
+      width: '100%',
+      height: '100%',
+      minHeight: '200px',
+      maxHeight: screenHeight * 0.6,
+      objectFit: 'contain' as const,
+    },
+    footer: {
+      padding: '15px',
+      paddingTop: '10px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    hintText: {
+      color: 'rgba(255, 255, 255, 0.7)',
+      fontSize: '12px',
+      textAlign: 'center' as const,
+    },
+  };
 
   return (
-    <Modal
-      visible={visible}
-      transparent={true} // Torna o fundo transparente para o overlay
-      animationType="fade" // Animação suave ao abrir/fechar
-      onRequestClose={onClose} // Permite fechar com o botão voltar do Android
-    >
-      <View style={styles.modalContainer}>
-        {/* Botão de Fechar */}
-        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-          <MaterialIcons name="close" size={30} color="#fff" />
-        </TouchableOpacity>
+    <div style={styles.modalContainer}>
+      <div style={styles.overlay} onClick={onClose}>
+        <div style={styles.imageWrapper} onClick={(e) => e.stopPropagation()}>
+          {/* Header com botão de fechar */}
+          <div style={styles.header}>
+            <div style={styles.closeButton} onClick={onClose}>
+              <span style={styles.closeButtonText}>✕</span>
+            </div>
+          </div>
 
-        {/* Imagem */}
-        {/* Use o componente Image do React Native. Certifique-se de que a URL é válida. */}
-        {/* Em um app real, você pode querer adicionar um ActivityIndicator enquanto a imagem carrega */}
-        <Image
-          source={{ uri: imageUrl }}
-          style={styles.fullImage}
-          resizeMode="contain" // Garante que a imagem inteira seja visível
-        />
-      </View>
-    </Modal>
+          {/* Container scrollável da imagem */}
+          <div style={styles.scrollContainer}>
+            {imageUrl && (
+              <div style={styles.imageContainer}>
+                <img
+                  src={imageUrl}
+                  style={styles.image}
+                  onError={(error) => {
+                    console.log('Erro ao carregar imagem:', error);
+                  }}
+                  alt="Imagem"
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Indicador de ação */}
+          <div style={styles.footer}>
+            <span style={styles.hintText}>
+              Toque fora da imagem para fechar
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  modalContainer: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.9)', // Fundo semi-transparente escuro
-    justifyContent: 'center', // Centraliza a imagem verticalmente
-    alignItems: 'center', // Centraliza a imagem horizontalmente
-  },
-  closeButton: {
-    position: 'absolute', // Posiciona o botão sobre a imagem
-    top: 40, // Distância do topo (ajuste conforme necessário)
-    right: 20, // Distância da direita (ajuste conforme necessário)
-    zIndex: 1, // Garante que o botão fique acima da imagem
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fundo semi-transparente para o botão
-    borderRadius: 20, // Cantos arredondados
-    padding: 5,
-  },
-  fullImage: {
-    width: '100%', // Ocupa toda a largura do container
-    height: '80%', // Ocupa a maior parte da altura (deixando espaço para o botão de fechar)
-    // Remova flex: 1 aqui para que a altura seja controlada pelo height
-  },
-});
+export default ImageViewerModal;
