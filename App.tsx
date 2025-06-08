@@ -1,11 +1,11 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
-import LandingPage from './src/screens/LandingPage';
+import AppNavigator from './src/components/navigation/AppNavigator';
 
 const App: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <LandingPage />
+      <AppNavigator />
     </SafeAreaView>
   );
 };

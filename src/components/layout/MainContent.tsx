@@ -1,55 +1,71 @@
+// src/components/layout/MainLayout.tsx
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StatusBar, StyleSheet } from 'react-native';
+import { useWeatherData } from '../../hooks/useWeatherData';
+import { useImageViewer } from '../../hooks/useImageViewer';
+import Navbar from '../Navbar';
+import InfoSections from '../InfoSections';
+import WeatherDisplay from '../WeatherDisplay';
+import ImageViewerModal from '../ImageViewerModal';
 
-const MainContent: React.FC = () => (
-  <View style={styles.container}>
-    <View style={styles.hero}>
-      <Text style={styles.title}>Complexo Esportivo Gonzaga</Text>
-      <Text style={styles.subtitle}>
-        O melhor espaço para suas atividades esportivas
-      </Text>
-    </View>
-    
-    <View style={styles.content}>
-      <Text style={styles.description}>
-        Bem-vindo ao Complexo Esportivo Gonzaga! Oferecemos as melhores 
-        instalações para a prática de diversos esportes em um ambiente 
-        moderno e acolhedor.
-      </Text>
-    </View>
-  </View>
-);
+const MainLayout: React.FC = () => {
+  const { temperatura, condicaoClima, loading, error } = useWeatherData();
+  const { isVisible, imageUrl, openImage, closeImage } = useImageViewer();
+
+  return (
+    <>
+      <StatusBar 
+        barStyle="dark-content" 
+        backgroundColor="#FFFFFF" 
+        translucent={false}
+      />
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Navbar />
+        </View>
+        
+        <View style={styles.content}>
+          <InfoSections onQuadraImagePress={openImage} />
+        </View>
+
+        <View style={styles.weatherContainer}>
+          <WeatherDisplay 
+            temperatura={temperatura}
+            condicaoClima={condicaoClima}
+            loading={loading}
+            error={error}
+          />
+        </View>
+
+        <ImageViewerModal
+          visible={isVisible}
+          imageUrl={imageUrl}
+          onClose={closeImage}
+        />
+      </View>
+    </>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    backgroundColor: '#FFFFFF',
+    paddingTop: 20,
   },
-  hero: {
-    alignItems: 'center',
-    paddingVertical: 40,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#333',
-    textAlign: 'center',
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
+  header: {
+    width: '100%',
   },
   content: {
-    marginTop: 30,
+    flex: 1,
+    paddingTop: 20,
   },
-  description: {
-    fontSize: 14,
-    lineHeight: 22,
-    color: '#555',
-    textAlign: 'center',
+  weatherContainer: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    zIndex: 5,
   },
 });
 
-export default MainContent;
+export default MainLayout;
