@@ -1,4 +1,3 @@
-// src/components/layout/MainLayout.tsx
 import React from 'react';
 import { View, StatusBar, StyleSheet } from 'react-native';
 import { useWeatherData } from '../../hooks/useWeatherData';

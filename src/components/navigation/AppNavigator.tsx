@@ -1,6 +1,5 @@
-// src/navigation/AppNavigator.tsx
 import React from 'react';
-import MainLayout from '../layout/MainContent';
+import MainLayout from '../layout/MainLayout';
 
 const AppNavigator: React.FC = () => {
   // Futuramente pode adicionar react-navigation aqui
