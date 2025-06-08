@@ -12,7 +12,12 @@ import Navbar from '../components/Navbar';
 import WeatherDisplay from '../components/WeatherDisplay';
 import { fetchWeatherData } from '../services/wheaterService';
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+const PELOTAS_LAT = -31.77;
+const PELOTAS_LON = -52.34;
+
+const METEOBLUE_API_KEY = 'W1HFf0IOLYdtAJlG.'; // retirar ponto do final para funcionar
+const METEOBLUE_API_URL = `https://my.meteoblue.com/packages/current?lat=${PELOTAS_LAT}&lon=${PELOTAS_LON}&apikey=${METEOBLUE_API_KEY}&format=json`;
+
 
 export default function Page() {
   const [temperatura, setTemperatura] = useState<number | null>(null);
@@ -97,20 +102,18 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: '#FFFFFFFF',
+    paddingTop: 20,
   },
-  header: {
-    backgroundColor: '#FFFFFF',
-    paddingBottom: 8,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-    zIndex: 10,
+  navbar: {
+    width: '100%',
+  },
+  navbarNav: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingBottom: 5,
   },
   content: {
     flex: 1,

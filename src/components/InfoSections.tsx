@@ -39,6 +39,7 @@ export default function InfoSections({ onQuadraImagePress }: InfoSectionsProps) 
     >
       {/* Seção O Gonzaga */}
       <View style={styles.section}>
+<<<<<<< HEAD
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>O Gonzaga</Text>
           <View style={styles.titleUnderline} />
@@ -54,11 +55,17 @@ export default function InfoSections({ onQuadraImagePress }: InfoSectionsProps) 
               seguro e bem estruturado.
             </Text>
           </View>
+=======
+        <Text style={styles.sectionTitle}></Text>
+        <View style={styles.infoPlaceholder}>
+          <Text style={styles.placeholderText}>Pré-informações sobre O Gonzaga</Text>
+>>>>>>> 3e47dcf321daca0938cc31db0afcad91e6c043ac
         </View>
       </View>
 
       {/* Seção Quadras */}
       <View style={styles.section}>
+<<<<<<< HEAD
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Quadras</Text>
           <View style={styles.titleUnderline} />
@@ -108,6 +115,29 @@ export default function InfoSections({ onQuadraImagePress }: InfoSectionsProps) 
               <Text style={styles.socialText}>WhatsApp</Text>
             </TouchableOpacity>
           </View>
+=======
+         {/* Título da seção Quadras - Ajustado marginBottom */}
+         <Text style={styles.sectionTitleQuadras}></Text>
+        <View style={styles.quadrasImagesContainer}>
+            {QUADRA_IMAGE_URLS.map((url, index) => (
+                <View key={index} style={styles.quadraItemContainer}>
+                    <TouchableOpacity
+                        style={styles.quadraImageArea}
+                        onPress={() => onQuadraImagePress && onQuadraImagePress(url)}
+                    >
+                        <Text style={styles.quadraImagePlaceholderText}>Ver Foto {index + 1}</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.quadraSubtitle}>{QUADRA_SUBTITLES[index] || `Quadra ${index + 1}`}</Text>
+                </View>
+            ))}
+        </View>
+      </View>
+
+      <View style={styles.section}>
+         <Text style={styles.sectionTitle}></Text>
+        <View style={styles.infoPlaceholder}>
+           <SocialButtons />
+>>>>>>> 3e47dcf321daca0938cc31db0afcad91e6c043ac
         </View>
       </View>
     </ScrollView>
