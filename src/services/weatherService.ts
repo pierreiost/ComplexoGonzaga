@@ -1,7 +1,7 @@
 import { parseISO } from 'date-fns';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { pictocodeToString } from '../components/apiWheater';
+import { pictocodeToString } from '../constants/weatherCodes';
 
 const PELOTAS_LAT = -31.77;
 const PELOTAS_LON = -52.34;

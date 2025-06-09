@@ -17,7 +17,7 @@ interface InfoSectionsProps {
 
 export default function InfoSections({ onQuadraImagePress }: InfoSectionsProps) {
   const handleInstagram = () => {
-    Linking.openURL('https://instagram.com');
+    Linking.openURL('https://instagram.com/complexogonzaga');
   };
 
   const handleWhatsApp = () => {

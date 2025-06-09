@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StatusBar, StyleSheet } from 'react-native';
-import { useWeatherData } from '../../hooks/useWeatherData';
+import { useWeatherData } from '../../hooks/UseWeatherData';
 import { useImageViewer } from '../../hooks/useImageViewer';
 import Navbar from '../Navbar';
 import InfoSections from '../InfoSections';

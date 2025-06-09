@@ -1,6 +1,6 @@
 // src/hooks/useWeatherData.ts
 import { useState, useEffect } from 'react';
-import { fetchWeatherData } from '../services/wheaterService';
+import { fetchWeatherData } from '../services/weatherService';
 
 export const useWeatherData = () => {
   const [temperatura, setTemperatura] = useState<number | null>(null);
