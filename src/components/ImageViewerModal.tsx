@@ -13,7 +13,7 @@ import {
 
 interface ImageViewerModalProps {
   visible: boolean;
-  imageUrl: string | null;
+  imageUrl: any; 
   onClose: () => void;
 }
 
@@ -35,22 +35,25 @@ const ImageViewerModal: React.FC<ImageViewerModalProps> = ({
         <View style={styles.modalContainer}>
           <TouchableWithoutFeedback>
             <View style={styles.imageWrapper}>
-              {/* Header com botão de fechar */}
+              {}
               <View style={styles.header}>
                 <TouchableOpacity style={styles.closeButton} onPress={onClose}>
                   <Text style={styles.closeButtonText}>✕</Text>
                 </TouchableOpacity>
               </View>
 
-              {/* Container scrollável da imagem */}
+              {}
               <ScrollView
                 contentContainerStyle={styles.scrollContainer}
                 showsVerticalScrollIndicator={false}
+                maximumZoomScale={3}
+                minimumZoomScale={1}
+                bouncesZoom={true}
               >
                 {imageUrl && (
                   <View style={styles.imageContainer}>
                     <Image
-                      source={{ uri: imageUrl }}
+                      source={imageUrl} 
                       style={styles.image}
                       resizeMode="contain"
                       onError={(error) => {
@@ -61,10 +64,10 @@ const ImageViewerModal: React.FC<ImageViewerModalProps> = ({
                 )}
               </ScrollView>
 
-              {/* Indicador de ação */}
+              {}
               <View style={styles.footer}>
                 <Text style={styles.hintText}>
-                  Toque fora da imagem para fechar
+                  Toque fora da imagem para fechar • Zoom disponível
                 </Text>
               </View>
             </View>
@@ -83,8 +86,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   imageWrapper: {
-    width: SCREEN_WIDTH - 40,
-    maxHeight: SCREEN_HEIGHT - 100,
+    width: SCREEN_WIDTH - 20, 
+    maxHeight: SCREEN_HEIGHT - 60, 
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
     borderRadius: 12,
     overflow: 'hidden',
@@ -92,8 +95,8 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    padding: 15,
-    paddingBottom: 10,
+    padding: 10, 
+    paddingBottom: 5,
   },
   closeButton: {
     width: 40,
@@ -115,11 +118,11 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    minHeight: SCREEN_HEIGHT * 0.4,
+    minHeight: SCREEN_HEIGHT * 0.7, 
   },
   imageContainer: {
-    width: SCREEN_WIDTH - 60,
-    height: SCREEN_HEIGHT * 0.6,
+    width: SCREEN_WIDTH - 30, 
+    height: SCREEN_HEIGHT * 0.75, 
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -128,8 +131,8 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   footer: {
-    padding: 15,
-    paddingTop: 10,
+    padding: 10, 
+    paddingTop: 5,
     alignItems: 'center',
   },
   hintText: {

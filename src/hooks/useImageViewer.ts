@@ -3,9 +3,9 @@ import { useState } from 'react';
 
 export const useImageViewer = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<any>(null); // Mudança: aceita qualquer tipo (string ou require())
 
-  const openImage = (url: string) => {
+  const openImage = (url: any) => { // Mudança: aceita qualquer tipo
     setImageUrl(url);
     setIsVisible(true);
   };

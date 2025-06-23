@@ -4,7 +4,7 @@ import { useWeatherData } from '../../hooks/UseWeatherData';
 import { useImageViewer } from '../../hooks/useImageViewer';
 import Navbar from '../Navbar';
 import InfoSections from '../InfoSections';
-import WeatherDisplay from '../WeatherDisplay';
+import WeatherCard from '../WeatherCard';
 import ImageViewerModal from '../ImageViewerModal';
 
 const MainLayout: React.FC = () => {
@@ -28,7 +28,7 @@ const MainLayout: React.FC = () => {
         </View>
 
         <View style={styles.weatherContainer}>
-          <WeatherDisplay 
+          <WeatherCard 
             temperatura={temperatura}
             condicaoClima={condicaoClima}
             loading={loading}

@@ -13,8 +13,15 @@ import {
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 interface InfoSectionsProps {
-  onQuadraImagePress: (imageUrl: string) => void;
+  onQuadraImagePress: (imageUrl: any) => void;
 }
+
+const quadraImages = {
+  quadra1: require('../../assets/images/quadra1.jpeg'),
+  quadra2: require('../../assets/images/quadra2.jpeg'),
+  quadra3: require('../../assets/images/quadra3.jpeg'),
+  quadra4: require('../../assets/images/quadra4.jpeg'),
+};
 
 export default function InfoSections({ onQuadraImagePress }: InfoSectionsProps) {
   const [screenData, setScreenData] = useState(Dimensions.get('window'));
@@ -28,35 +35,34 @@ export default function InfoSections({ onQuadraImagePress }: InfoSectionsProps) 
     return () => subscription?.remove();
   }, []);
 
-  // Função para calcular número de colunas baseado na largura da tela
   const getColumnsCount = () => {
-    if (screenData.width < 350) return 1;
-    if (screenData.width < 600) return 2;
-    return 3;
+    if (screenData.width < 400) return 2;
+    return 2;
   };
 
-  // Função para calcular largura dos cards
   const getCardWidth = () => {
     const columns = getColumnsCount();
-    const horizontalMargin = 32; // 16 * 2
-    const gap = 12;
+    const horizontalMargin = 32;
+    const gap = 8;
     const totalGaps = (columns - 1) * gap;
     return (screenData.width - horizontalMargin - totalGaps) / columns;
   };
 
-  // Função para calcular altura da imagem baseada na largura (aspect ratio 4:3)
   const getImageHeight = () => {
     const cardWidth = getCardWidth();
-    const cardPadding = 24; // 12 * 2
+    const cardPadding = 16;
     const imageWidth = cardWidth - cardPadding;
-    return (imageWidth * 3) / 4; // Aspect ratio 4:3
+    return (imageWidth * 9) / 16;
   };
 
-  // Função para calcular espaçamentos responsivos
   const getResponsiveSpacing = () => {
-    if (screenData.width < 350) return { gap: 8, padding: 8 };
-    if (screenData.width < 600) return { gap: 12, padding: 12 };
-    return { gap: 16, padding: 16 };
+    if (screenData.width < 350) return { gap: 6, padding: 6, cardPadding: 8 };
+    if (screenData.width < 600) return { gap: 8, padding: 8, cardPadding: 10 };
+    return { gap: 10, padding: 12, cardPadding: 12 };
+  };
+
+  const handleFacebook = () => {
+    Linking.openURL('https://www.facebook.com/profile.php?id=61577099866861');
   };
 
   const handleInstagram = () => {
@@ -64,33 +70,29 @@ export default function InfoSections({ onQuadraImagePress }: InfoSectionsProps) 
   };
 
   const handleWhatsApp = () => {
-    Linking.openURL('https://wa.me');
+    Linking.openURL('https://wa.me/53991343579');
   };
 
   const quadras = [
     { 
       id: 1, 
       name: 'Quadra Principal', 
-      image: 'https://github.com/pierreiost/ComplexoGonzaga/blob/main/assets/images/IMG_1558.JPG',
-      fallbackImage: 'https://via.placeholder.com/300x225/e0e0e0/666?text=Quadra+Principal'
+      image: quadraImages.quadra1
     },
     { 
       id: 2, 
       name: 'Quadra de Areia', 
-      image: 'https://github.com/pierreiost/ComplexoGonzaga/blob/main/assets/images/IMG_1560.JPG',
-      fallbackImage: 'https://via.placeholder.com/300x225/e0e0e0/666?text=Quadra+de+Areia'
+      image: quadraImages.quadra2
     },
     { 
       id: 3, 
       name: 'Quadra Coberta', 
-      image: 'https://via.placeholder.com/300x225/e0e0e0/666?text=Quadra+Coberta',
-      fallbackImage: 'https://via.placeholder.com/300x225/e0e0e0/666?text=Quadra+Coberta'
+      image: quadraImages.quadra3
     },
     { 
       id: 4, 
       name: 'Quadra de Treino', 
-      image: 'https://via.placeholder.com/300x225/e0e0e0/666?text=Quadra+de+Treino',
-      fallbackImage: 'https://via.placeholder.com/300x225/e0e0e0/666?text=Quadra+de+Treino'
+      image: quadraImages.quadra4
     },
   ];
 
@@ -104,7 +106,6 @@ export default function InfoSections({ onQuadraImagePress }: InfoSectionsProps) 
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.scrollContent}
     >
-      {/* Seção O Gonzaga */}
       <View style={[styles.section, { marginHorizontal: spacing.padding }]}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>O Gonzaga</Text>
@@ -121,21 +122,21 @@ export default function InfoSections({ onQuadraImagePress }: InfoSectionsProps) 
         </View>
       </View>
 
-      {/* Seção Quadras */}
-      <View style={[styles.section, { marginHorizontal: spacing.padding }]}>
+      <View style={[styles.section, { marginHorizontal: spacing.padding, marginBottom: 16 }]}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Quadras</Text>
           <View style={styles.titleUnderline} />
         </View>
         <View style={[styles.quadrasGrid, { gap: spacing.gap }]}>
-          {quadras.map((quadra) => (
+          {quadras.map((quadra, index) => (
             <TouchableOpacity
               key={quadra.id}
               style={[
                 styles.quadraCard, 
                 { 
                   width: cardWidth,
-                  padding: spacing.padding 
+                  padding: spacing.cardPadding,
+                  marginBottom: index < 2 ? spacing.gap : 0,
                 }
               ]}
               onPress={() => onQuadraImagePress(quadra.image)}
@@ -143,13 +144,9 @@ export default function InfoSections({ onQuadraImagePress }: InfoSectionsProps) 
             >
               <View style={[styles.quadraImageContainer, { height: imageHeight }]}>
                 <Image
-                  source={{ uri: quadra.image }}
+                  source={quadra.image}
                   style={styles.quadraImage}
                   resizeMode="cover"
-                  onError={() => {
-                    // Fallback para imagem placeholder se a original falhar
-                    console.log(`Erro ao carregar imagem: ${quadra.image}`);
-                  }}
                 />
                 <View style={styles.imageOverlay}>
                   <Text style={styles.imageOverlayText}>Ver Foto</Text>
@@ -157,7 +154,7 @@ export default function InfoSections({ onQuadraImagePress }: InfoSectionsProps) 
               </View>
               <Text style={[
                 styles.quadraName,
-                { fontSize: screenData.width < 350 ? 12 : 14 }
+                { fontSize: screenData.width < 350 ? 11 : 12 }
               ]}>
                 {quadra.name}
               </Text>
@@ -166,7 +163,6 @@ export default function InfoSections({ onQuadraImagePress }: InfoSectionsProps) 
         </View>
       </View>
 
-      {/* Seção Fale Conosco */}
       <View style={[styles.section, { marginHorizontal: spacing.padding, marginBottom: 20 }]}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Fale Conosco</Text>
@@ -179,7 +175,7 @@ export default function InfoSections({ onQuadraImagePress }: InfoSectionsProps) 
           <View style={[
             styles.socialButtons,
             { 
-              flexDirection: screenData.width < 400 ? 'column' : 'row',
+              flexDirection: screenData.width < 600 ? 'column' : 'row',
               gap: spacing.gap 
             }
           ]}>
@@ -187,7 +183,7 @@ export default function InfoSections({ onQuadraImagePress }: InfoSectionsProps) 
               style={[
                 styles.socialButton, 
                 styles.instagramButton,
-                { minWidth: screenData.width < 400 ? '80%' : 140 }
+                { minWidth: screenData.width < 600 ? '80%' : 120 }
               ]}
               onPress={handleInstagram}
               activeOpacity={0.8}
@@ -198,8 +194,20 @@ export default function InfoSections({ onQuadraImagePress }: InfoSectionsProps) 
             <TouchableOpacity
               style={[
                 styles.socialButton, 
+                styles.facebookButton,
+                { minWidth: screenData.width < 600 ? '80%' : 120 }
+              ]}
+              onPress={handleFacebook}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.socialIcon}>📘</Text>
+              <Text style={styles.socialText}>Facebook</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.socialButton, 
                 styles.whatsappButton,
-                { minWidth: screenData.width < 400 ? '80%' : 140 }
+                { minWidth: screenData.width < 600 ? '80%' : 120 }
               ]}
               onPress={handleWhatsApp}
               activeOpacity={0.8}
@@ -219,14 +227,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 100, // Espaço para o weather card
+    paddingBottom: 100,
   },
   section: {
-    marginBottom: 32,
+    marginBottom: 24,
   },
   sectionHeader: {
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 16,
   },
   sectionTitle: {
     fontSize: 24,
@@ -242,8 +250,6 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     marginTop: 8,
   },
-  
-  // Gonzaga Section
   gonzagaCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
@@ -267,8 +273,6 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     textAlign: 'center',
   },
-
-  // Quadras Section - Responsivo
   quadrasGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -276,21 +280,20 @@ const styles = StyleSheet.create({
   },
   quadraCard: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
+    borderRadius: 12,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 3,
     borderWidth: 1,
     borderColor: '#F0F0F0',
-    marginBottom: 16,
   },
   quadraImageContainer: {
     width: '100%',
-    borderRadius: 12,
+    borderRadius: 8,
     overflow: 'hidden',
-    marginBottom: 12,
+    marginBottom: 8,
     position: 'relative',
   },
   quadraImage: {
@@ -303,12 +306,12 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingVertical: 6,
+    paddingHorizontal: 8,
   },
   imageOverlayText: {
     color: '#FFFFFF',
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: '600',
     textAlign: 'center',
   },
@@ -316,10 +319,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#333',
     textAlign: 'center',
-    marginBottom: 8,
+    marginBottom: 6,
+    lineHeight: 16,
   },
-
-  // Contact Section
   contactContainer: {
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
@@ -359,6 +361,9 @@ const styles = StyleSheet.create({
   instagramButton: {
     backgroundColor: '#E4405F',
   },
+  facebookButton: {
+    backgroundColor: '#1877F2',
+  },
   whatsappButton: {
     backgroundColor: '#25D366',
   },
@@ -373,4 +378,3 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
 });
-
