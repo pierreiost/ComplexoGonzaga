@@ -24,6 +24,11 @@ const ImageViewerModal: React.FC<ImageViewerModalProps> = ({
   imageUrl,
   onClose,
 }) => {
+  // Função para impedir a propagação do evento
+  const handleImageAreaPress = (event: any) => {
+    event.stopPropagation();
+  };
+
   return (
     <Modal
       visible={visible}
@@ -33,45 +38,50 @@ const ImageViewerModal: React.FC<ImageViewerModalProps> = ({
     >
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.modalContainer}>
-          <TouchableWithoutFeedback>
-            <View style={styles.imageWrapper}>
-              {}
-              <View style={styles.header}>
-                <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-                  <Text style={styles.closeButtonText}>✕</Text>
-                </TouchableOpacity>
-              </View>
-
-              {}
-              <ScrollView
-                contentContainerStyle={styles.scrollContainer}
-                showsVerticalScrollIndicator={false}
-                maximumZoomScale={3}
-                minimumZoomScale={1}
-                bouncesZoom={true}
-              >
-                {imageUrl && (
-                  <View style={styles.imageContainer}>
-                    <Image
-                      source={imageUrl} 
-                      style={styles.image}
-                      resizeMode="contain"
-                      onError={(error) => {
-                        console.log('Erro ao carregar imagem:', error);
-                      }}
-                    />
-                  </View>
-                )}
-              </ScrollView>
-
-              {}
-              <View style={styles.footer}>
-                <Text style={styles.hintText}>
-                  Toque fora da imagem para fechar • Zoom disponível
-                </Text>
-              </View>
+          {/* Usar View com onStartShouldSetResponder para bloquear eventos */}
+          <View
+            style={styles.imageWrapper}
+            onStartShouldSetResponder={() => true}
+            onResponderGrant={handleImageAreaPress}
+          >
+            {/* Header com botão de fechar */}
+            <View style={styles.header}>
+              <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+                <Text style={styles.closeButtonText}>✕</Text>
+              </TouchableOpacity>
             </View>
-          </TouchableWithoutFeedback>
+
+            {/* ScrollView com zoom */}
+            <ScrollView
+              contentContainerStyle={styles.scrollContainer}
+              showsVerticalScrollIndicator={false}
+              maximumZoomScale={3}
+              minimumZoomScale={1}
+              bouncesZoom={true}
+              // Impedir que o ScrollView propague eventos para o pai
+              onStartShouldSetResponder={() => true}
+            >
+              {imageUrl && (
+                <View style={styles.imageContainer}>
+                  <Image
+                    source={imageUrl} 
+                    style={styles.image}
+                    resizeMode="contain"
+                    onError={(error) => {
+                      console.log('Erro ao carregar imagem:', error);
+                    }}
+                  />
+                </View>
+              )}
+            </ScrollView>
+
+            {/* Footer com dicas */}
+            <View style={styles.footer}>
+              <Text style={styles.hintText}>
+                Toque fora da imagem para fechar • Zoom disponível
+              </Text>
+            </View>
+          </View>
         </View>
       </TouchableWithoutFeedback>
     </Modal>

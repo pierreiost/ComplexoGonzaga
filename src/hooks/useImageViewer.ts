@@ -1,19 +1,28 @@
 // src/hooks/useImageViewer.ts
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 export const useImageViewer = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [imageUrl, setImageUrl] = useState<any>(null); // Mudança: aceita qualquer tipo (string ou require())
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
-  const openImage = (url: any) => { // Mudança: aceita qualquer tipo
+  const openImage = useCallback((url: string) => {
+    console.log('Abrindo imagem:', url);
     setImageUrl(url);
     setIsVisible(true);
-  };
+  }, []);
 
-  const closeImage = () => {
+  const closeImage = useCallback(() => {
+    console.log('Fechando modal de imagem');
     setIsVisible(false);
-    setImageUrl(null);
-  };
+    setTimeout(() => {
+      setImageUrl(null);
+    }, 300);
+  }, []);
 
-  return { isVisible, imageUrl, openImage, closeImage };
+  return { 
+    isVisible, 
+    imageUrl, 
+    openImage, 
+    closeImage 
+  };
 };
